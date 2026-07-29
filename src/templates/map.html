@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CWRAT Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="../../docs/css/styles.css">
+  </head>
+  <body>
+    <header>
+      <nav id="header-bar">
+        <div id="header-left">
+          <div id="header-title">CWRAT Map</div>
+        </div>
+        <div id="header-nav">
+          <a href="#" class="active">Map</a>
+          <a href="../../docs/about.html">About</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+
+      <div id="map"></div>
+      </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
+    <script src="../../../data/states_outline.js"></script>
+    <script>
+
+      const map = L.map('map').setView([39.8283, -98.5795], 4);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
+
+
+    fetch('../../../data/states_data.json')
+        .then(response => response.json())
+        .then(colorData => {
+        L.geoJson(statesData, {
+            style: function(feature) {
+
+            const stateName = feature.properties.name;
+            let assignedColor = "#cccccc"; // Fallback color if state isn't found
+            
+            if (colorData[stateName] && colorData[stateName].Color) {
+                assignedColor = colorData[stateName].Color;
+            }
+
+            return {
+                fillColor: assignedColor,
+                weight: 1.5,
+                opacity: 1,
+                color: 'white', 
+                fillOpacity: 0.6 
+            };
+            },
+            
+            onEachFeature: function(feature, layer) {
+                if (feature.properties && feature.properties.name) {
+                    layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
+                }
+                layer.on('add', function() {
+                    const e = layer._path; // grab svg element path
+
+                    e.setAttribute('tabindex', '0');
+                    e.setAttribute('role', 'button');
+                    e.setAttribute('aria-label', `${feature.properties.name}, status color is ${feature.properties.color}`);
+
+                    e.style.outline = 'none';
+                    e.addEventListener('focus', () => {
+                        e.setAttribute('stroke', 'black');
+                        e.setAttribute('stroke-width', '2');
+                    });
+                    e.addEventListener('focusout', () => {
+                        e.setAttribute('stroke', 'white');
+                        e.setAttribute('stroke-width', '2');
+                    });
+
+                    e.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            layer.openPopup();
+                        }
+                    });
+
+                });
+            }
+        }).addTo(map);
+
+        }).catch(err => console.error("Error loading the color JSON:", err));
+
+        const legend = L.control({ position: 'bottomleft' });
+
+        legend.onAdd = function (map) {
+          const div = L.DomUtil.create('div', 'info legend');
+
+          const categories = [
+            { color: 'green', label: 'Under Consideration' },
+            { color: 'blue', label: 'In Use' },
+            { color: 'purple', label: 'Abandoned' },
+            { color: 'grey', label: 'No Record' }
+          ];
+
+          div.innerHTML = '<h4>Legend</h4>';
+
+          categories.forEach(item => {
+            div.innerHTML += `
+              <div class="legend-item">
+                <i style="background: ${item.color};"></i>
+                <span>${item.label}</span>
+              </div>
+            `;
+          });
+
+          return div;
+        };
+        legend.addTo(map);
+
+
+      setTimeout(() => map.invalidateSize(), 100);
+    </script>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 64px);
+            padding: 0;
+            margin: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            flex: 1;
+        }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,217 @@
+{
+
+    "Alabama":
+        {
+            "Color": "grey"
+        },
+    "Alaska":
+        {
+            "Color": "purple"
+        },
+    "Arizona":
+        {
+            "Color": "grey"
+        },
+    "Arkansas":
+        {
+            "Color": "blue"
+        },
+    "California":
+        {
+            "Color": "green"
+        },
+    "Colorado":
+        {
+            "Color": "blue"
+        },
+    "Connecticut":
+        {
+            "Color": "green"
+        },
+    "Delaware":
+        {
+            "Color": "grey"
+        },
+    "District of Columbia":
+        {
+            "Color": "green"
+        },
+    "Florida":
+        {
+            "Color": "blue"
+        },
+    "Georgia":
+        {
+            "Color": "grey"
+        },
+    "Hawaii":
+        {
+            "Color": "grey"
+        },
+    "Idaho":
+        {
+            "Color": "grey"
+        },
+    "Illinois":
+        {
+            "Color": "purple"
+        },
+    "Indiana":
+        {
+            "Color": "blue"
+        },
+    "Iowa":
+        {
+            "Color": "grey"
+        },
+    "Kansas":
+        {
+            "Color": "grey"
+        },
+    "Kentucky":
+        {
+            "Color": "grey"
+        },
+    "Louisiana":
+        {
+            "Color": "purple"
+        },
+    "Maine":
+        {
+            "Color": "blue"
+        },
+    "Maryland":
+        {
+            "Color": "grey"
+        },
+    "Massachusetts":
+        {
+            "Color": "green"
+        },
+    "Michigan":
+        {
+            "Color": "green"
+        },
+    "Minnesota":
+        {
+            "Color": "grey"
+        },
+    "Mississippi":
+        {
+            "Color": "grey"
+        },
+    "Missouri":
+        {
+            "Color": "green"
+        },
+    "Montana":
+        {
+            "Color": "grey"
+        },
+    "Nebraska":
+        {
+            "Color": "grey"
+        },
+    "Nevada":
+        {
+            "Color": "green"
+        },
+    "New Hampshire":
+        {
+            "Color": "blue"
+        },
+    "New Jersey":
+        {
+            "Color": "blue"
+        },
+    "New Mexico":
+        {
+            "Color": "grey"
+        },
+    "New York":
+        {
+            "Color": "blue"
+        },
+        
+    "North Carolina":
+        {
+            "Color": "green"
+        },
+    "North Dakota":
+        {
+            "Color": "grey"
+        },
+    "Ohio":
+        {
+            "Color": "purple"
+        },
+    "Oklahoma":
+        {
+            "Color": "purple"
+        },
+    "Oregon":
+        {
+            "Color": "blue"
+        },
+    "Pennsylvania":
+        {
+            "Color": "blue"
+        },
+    "Rhode Island":
+        {
+            "Color": "grey"
+        },
+        
+    "South Carolina":
+        {
+            "Color": "grey"
+        },
+    "South Dakota":
+        {
+            "Color": "grey"
+        },
+    "Tennessee":
+        {
+            "Color": "green"
+        },
+    "Texas":
+        {
+            "Color": "grey"
+        },
+    "Utah":
+        {
+            "Color": "grey"
+        },
+    "Vermont":
+        {
+            "Color": "grey"
+        },
+    "Virginia":
+        {
+            "Color": "blue"
+        },
+    "Washington":
+        {
+            "Color": "green"
+        },
+        
+    "West Virginia":
+        {
+            "Color": "grey"
+        },
+    "Wisconsin":
+        {
+            "Color": "green"
+        },
+        
+    "Wyoming":
+        {
+            "Color": "grey"
+        },
+    "Puerto Rico":
+        {
+            "Color": "grey"
+        }
+           
+    
+}
