@@ -22,6 +22,11 @@
     <main>
 
       <div id="map"></div>
+      <div id="sidebar" class="sidebar">
+        <button id="sidebar-close" class="sidebar-close" onclick="closeSidebar()">&times;</button>
+        <div id="sidebar-content"> 
+
+        </div>
       </div>
     </main>
 
@@ -32,6 +37,8 @@
     <script src="../../../data/states_outline.js"></script>
     <script>
 
+      let lastFocusedElement = null;
+
       const map = L.map('map').setView([39.8283, -98.5795], 4);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
@@ -39,91 +46,198 @@
       }).addTo(map);
 
 
-    fetch('../../../data/states_data.json')
-        .then(response => response.json())
-        .then(colorData => {
-        L.geoJson(statesData, {
-            style: function(feature) {
+      map.on('popupopen', function(e) {
+          const popupEl = e.popup.getElement();
+          if (!popupEl) return;
+          
+          // Give NVDA and the DOM a moment to settle
+          setTimeout(() => {
+              const firstBtn = popupEl.querySelector('.county-btn');
+              
+              if (firstBtn) {
+                  // preventScroll: true is the magic fix that stops the top-left jumping
+                  firstBtn.focus({ preventScroll: true }); 
+              } else {
+                  // Fallback if no counties exist
+                  popupEl.setAttribute('tabindex', '-1');
+                  popupEl.focus({ preventScroll: true });
+              }
+          }, 100);
+      });
 
-            const stateName = feature.properties.name;
-            let assignedColor = "#cccccc"; // Fallback color if state isn't found
-            
-            if (colorData[stateName] && colorData[stateName].Color) {
-                assignedColor = colorData[stateName].Color;
-            }
+      function closeSidebar() {
+        var sb = document.getElementById('sidebar');
+        sb.classList.remove('open');
 
-            return {
-                fillColor: assignedColor,
-                weight: 1.5,
-                opacity: 1,
-                color: 'white', 
-                fillOpacity: 0.6 
-            };
-            },
+        const content = document.getElementById('sidebar-content');
+        content.innerHTML = '';
+
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+        }
+
+      }
+
+      function openSidebar(stateName, countyName, colorData){
+        const countyob = colorData[stateName]?.Counties?.[countyName];
+
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('sidebar-content');
+        if (!countyob) return;
+
+        let details = `<h2>${countyName}, ${stateName}</h2>`;
+        for (var [key, value] of Object.entries(countyob)) {
+          details += `<p><strong>${key}:</strong> ${value}</p>`;
+        }
+
+        content.innerHTML = details;
+        sidebar.classList.add('open');
+
+
+        const closeBtn = document.getElementById('sidebar-close');
+        if (closeBtn) {
+          setTimeout(() => closeBtn.focus(), 100); 
+        }
+      }
+
+      function buildPopupHTML(stateName, colorData) {
+        const stateData = colorData[stateName];
+        let html = `<strong>${stateName}</strong>`;
+
+        if (stateData && stateData.Counties) {
+          html += `<div style="margin-top: 6px;"><strong>Counties:</strong></div>`;
+          html += `<ul class="popup-county-list">`;
+
+          for (const countyName of Object.keys(stateData.Counties)) {
+            html += `
+              <li>
+                <button 
+                  class="county-btn" 
+                  data-state="${stateName}" 
+                  data-county="${countyName}"
+                >
+                  ${countyName}
+                </button>
+              </li>`;
+          }
+
+          html += `</ul>`;
+        } 
+        else {
+          html += `<p style="margin: 4px 0 0; font-size: 12px; color: #666;">No county data available.</p>`;
+        }
+
+        return html;
+      }
+
+
+      fetch('../../../data/states_data.json')
+          .then(response => response.json())
+          .then(colorData => {
+
+
+            document.addEventListener('click', function(event){
+
+              lastFocusedElement = event.target;
+
+              if (event.target.classList.contains('county-btn')) {
+                const state = event.target.getAttribute('data-state');
+                const county = event.target.getAttribute('data-county');
+                openSidebar(state, county, colorData);
+              }
+            });
+
+
+            L.geoJson(statesData, {
+                style: function(feature) {
+
+
+                const stateName = feature.properties.name;
+                let assignedColor = "#cccccc"; // Fallback color if state isn't found
+                
             
-            onEachFeature: function(feature, layer) {
-                if (feature.properties && feature.properties.name) {
-                    layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
+                if (colorData[stateName] && colorData[stateName].Color) {
+                    assignedColor = colorData[stateName].Color;
                 }
-                layer.on('add', function() {
-                    const e = layer._path; // grab svg element path
 
-                    e.setAttribute('tabindex', '0');
-                    e.setAttribute('role', 'button');
-                    e.setAttribute('aria-label', `${feature.properties.name}, status color is ${feature.properties.color}`);
+                return {
+                    fillColor: assignedColor,
+                    weight: 1.5,
+                    opacity: 1,
+                    color: 'white', 
+                    fillOpacity: 0.6 
+                };
+                },
+                
+                onEachFeature: function(feature, layer) {
+                    if (feature.properties && feature.properties.name) {
+                        layer.bindPopup(buildPopupHTML(feature.properties.name, colorData), {
+                          autoPan: false
+                        });
+                    }
+                    layer.on('add', function() {
+                        const e = layer._path; // grab svg element path
 
-                    e.style.outline = 'none';
-                    e.addEventListener('focus', () => {
-                        e.setAttribute('stroke', 'black');
-                        e.setAttribute('stroke-width', '2');
+                        e.setAttribute('tabindex', '0');
+                        e.setAttribute('role', 'button');
+                        e.setAttribute('aria-label', `${feature.properties.name}, status color is ${colorData[feature.properties.name].Color}`);
+
+                        e.style.outline = 'none';
+                        e.addEventListener('focus', () => {
+                            e.setAttribute('stroke', 'black');
+                            e.setAttribute('stroke-width', '2');
+                        });
+                        e.addEventListener('focusout', () => {
+                            e.setAttribute('stroke', 'white');
+                            e.setAttribute('stroke-width', '2');
+                        });
+                        
+                        
+                        e.addEventListener('keydown', (evt) => {
+                            if (evt.key === 'Enter' || evt.key === ' ') {
+                                evt.preventDefault(); // Prevents Spacebar from scrolling the page
+                                
+                                // Instead of manually opening the popup, tell Leaflet to trigger 
+                                // its own click event. This ensures the popup opens at the correct coordinates.
+                                layer.fire('click');
+                            }
+                        });
+
                     });
-                    e.addEventListener('focusout', () => {
-                        e.setAttribute('stroke', 'white');
-                        e.setAttribute('stroke-width', '2');
-                    });
+                }
+            }).addTo(map);
 
-                    e.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            layer.openPopup();
-                        }
-                    });
+            }).catch(err => console.error("Error loading the color JSON:", err));
 
-                });
-            }
-        }).addTo(map);
+            const legend = L.control({ position: 'bottomleft' });
 
-        }).catch(err => console.error("Error loading the color JSON:", err));
+            legend.onAdd = function (map) {
+              const div = L.DomUtil.create('div', 'info legend');
 
-        const legend = L.control({ position: 'bottomleft' });
+              const categories = [
+                { color: 'green', label: 'Under Consideration' },
+                { color: 'blue', label: 'In Use' },
+                { color: 'purple', label: 'Abandoned' },
+                { color: 'grey', label: 'No Record' }
+              ];
 
-        legend.onAdd = function (map) {
-          const div = L.DomUtil.create('div', 'info legend');
+              div.innerHTML = '<h4>Legend</h4>';
 
-          const categories = [
-            { color: 'green', label: 'Under Consideration' },
-            { color: 'blue', label: 'In Use' },
-            { color: 'purple', label: 'Abandoned' },
-            { color: 'grey', label: 'No Record' }
-          ];
+              categories.forEach(item => {
+                div.innerHTML += `
+                  <div class="legend-item">
+                    <i style="background: ${item.color};"></i>
+                    <span>${item.label}</span>
+                  </div>
+                `;
+              });
 
-          div.innerHTML = '<h4>Legend</h4>';
-
-          categories.forEach(item => {
-            div.innerHTML += `
-              <div class="legend-item">
-                <i style="background: ${item.color};"></i>
-                <span>${item.label}</span>
-              </div>
-            `;
-          });
-
-          return div;
-        };
-        legend.addTo(map);
+              return div;
+            };
+            legend.addTo(map);
 
 
-      setTimeout(() => map.invalidateSize(), 100);
+        setTimeout(() => map.invalidateSize(), 100);
     </script>
 
     <style>

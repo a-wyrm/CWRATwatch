@@ -6,7 +6,13 @@
         },
     "Alaska":
         {
-            "Color": "purple"
+            "Color": "purple",
+            "Counties": {
+                "Anchorage": {
+                        "Population": "291,247",
+                        "Overview": "Contains over 40% of the state's population."
+                }
+            }
         },
     "Arizona":
         {

@@ -309,3 +309,53 @@ blockquote p {
     border: 1px solid #ccc;
     border-radius: 3px;
 }
+
+
+/* Sidebar Drawer */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -360px; /* Hidden off-screen by default */
+  width: 320px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-in-out;
+  z-index: 2000; /* Ensure it stays above Leaflet map elements */
+  padding: 24px 20px;
+  overflow-y: auto;
+}
+
+.sidebar.open {
+  right: 0; /* Slide into view */
+}
+
+.sidebar-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  float: right;
+  line-height: 1;
+}
+
+/* Styling county list in Leaflet popup */
+.popup-county-list {
+  margin: 6px 0 0 0;
+  padding-left: 18px;
+}
+
+.county-btn {
+  background: none;
+  border: none;
+  color: #0066cc;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px 0;
+  font-size: 13px;
+  text-align: left;
+}
+
+.county-btn:hover {
+  color: #003399;
+}
