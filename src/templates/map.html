@@ -16,28 +16,28 @@
         <div id="header-nav">
           <a href="#" class="active">Map</a>
           <a href="../../docs/about.html">About</a>
+          <a href="../../docs/updates.html">Updates</a>
         </div>
       </nav>
     </header>
     <main>
 
-      <div id="map"></div>
+      <!-- role="application" tells NVDA to pass Tab and Arrow keys directly to JS -->
+      <div id="map" role="application" aria-label="Interactive CWRAT Map. Use Tab or Arrow keys to navigate states."></div>
       <div id="sidebar" class="sidebar">
         <button id="sidebar-close" class="sidebar-close" onclick="closeSidebar()">&times;</button>
-        <div id="sidebar-content"> 
-
-        </div>
+        <div id="sidebar-content"></div>
       </div>
     </main>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script src="../../../data/states_outline.js"></script>
     <script>
 
       let lastFocusedElement = null;
+      let statePaths = [];
+      let isJustClosed = false;
 
       const map = L.map('map').setView([39.8283, -98.5795], 4);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -45,24 +45,89 @@
         maxZoom: 19,
       }).addTo(map);
 
-
       map.on('popupopen', function(e) {
-          const popupEl = e.popup.getElement();
-          if (!popupEl) return;
-          
-          // Give NVDA and the DOM a moment to settle
-          setTimeout(() => {
-              const firstBtn = popupEl.querySelector('.county-btn');
-              
-              if (firstBtn) {
-                  // preventScroll: true is the magic fix that stops the top-left jumping
-                  firstBtn.focus({ preventScroll: true }); 
-              } else {
-                  // Fallback if no counties exist
-                  popupEl.setAttribute('tabindex', '-1');
-                  popupEl.focus({ preventScroll: true });
+        const popupEl = e.popup.getElement();
+        if (!popupEl) return;
+
+        popupEl.setAttribute('role', 'dialog');
+        popupEl.setAttribute('aria-modal', 'true');
+
+        const titleEl = popupEl.querySelector('[id^="popup-title-"]');
+        if (titleEl) {
+          popupEl.setAttribute('aria-labelledby', titleEl.id);
+        }
+
+        const closeBtn = popupEl.querySelector('.leaflet-popup-close-button');
+        if (closeBtn) {
+          closeBtn.setAttribute('role', 'button');
+          closeBtn.setAttribute('aria-label', 'Close menu');
+        }
+
+        if (e.popup._source && e.popup._source._path) {
+          e.popup._source._path.setAttribute('aria-expanded', 'true');
+        }
+
+        setTimeout(() => {
+          const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+          const focusables = Array.from(popupEl.querySelectorAll(focusableSelectors));
+
+          if (focusables.length > 0) {
+            focusables[0].focus({ preventScroll: true });
+
+            // Trap Tab key inside popup until exited
+            const trapFocus = function(evt) {
+              if (evt.key === 'Escape') {
+                map.closePopup(e.popup);
+                return;
               }
-          }, 100);
+
+              if (evt.key === 'Tab') {
+                const currentFocusables = Array.from(popupEl.querySelectorAll(focusableSelectors));
+                if (currentFocusables.length === 0) return;
+                const first = currentFocusables[0];
+                const last = currentFocusables[currentFocusables.length - 1];
+
+                if (evt.shiftKey && document.activeElement === first) {
+                  evt.preventDefault();
+                  last.focus();
+                } else if (!evt.shiftKey && document.activeElement === last) {
+                  evt.preventDefault();
+                  first.focus();
+                }
+              }
+            };
+
+            popupEl.addEventListener('keydown', trapFocus);
+            popupEl._trapFocusListener = trapFocus;
+          } else {
+            popupEl.setAttribute('tabindex', '-1');
+            popupEl.focus({ preventScroll: true });
+          }
+        }, 100);
+      });
+
+      map.on('popupclose', function(e) {
+        isJustClosed = true;
+
+        const popupEl = e.popup.getElement();
+        const currentPath = e.popup._source ? e.popup._source._path : null;
+
+        if (popupEl && popupEl._trapFocusListener) {
+          popupEl.removeEventListener('keydown', popupEl._trapFocusListener);
+        }
+
+        if (e.popup._source && e.popup._source._path) {
+          e.popup._source._path.setAttribute('aria-expanded', 'false');
+        }
+
+        if (currentPath) {
+          setTimeout(() => {
+            currentPath.focus({ preventScroll: true });
+            setTimeout(() => { isJustClosed = false; }, 150);
+          }, 50);
+        } else {
+          isJustClosed = false;
+        }
       });
 
       function closeSidebar() {
@@ -75,10 +140,9 @@
         if (lastFocusedElement) {
           lastFocusedElement.focus();
         }
-
       }
 
-      function openSidebar(stateName, countyName, colorData){
+      function openSidebar(stateName, countyName, colorData) {
         const countyob = colorData[stateName]?.Counties?.[countyName];
 
         const sidebar = document.getElementById('sidebar');
@@ -93,7 +157,6 @@
         content.innerHTML = details;
         sidebar.classList.add('open');
 
-
         const closeBtn = document.getElementById('sidebar-close');
         if (closeBtn) {
           setTimeout(() => closeBtn.focus(), 100); 
@@ -102,7 +165,10 @@
 
       function buildPopupHTML(stateName, colorData) {
         const stateData = colorData[stateName];
-        let html = `<strong>${stateName}</strong>`;
+        const cleanStateId = stateName.replace(/[^a-zA-Z0-9]/g, '');
+        const titleId = `popup-title-${cleanStateId}`;
+
+        let html = `<h3 id="${titleId}" style="margin: 0 0 6px 0; font-size: 16px;">${stateName}</h3>`;
 
         if (stateData && stateData.Counties) {
           html += `<div style="margin-top: 6px;"><strong>Counties:</strong></div>`;
@@ -130,137 +196,135 @@
         return html;
       }
 
-
       fetch('../../../data/states_data.json')
-          .then(response => response.json())
-          .then(colorData => {
+        .then(response => response.json())
+        .then(colorData => {
 
+          document.addEventListener('click', function(event){
+            lastFocusedElement = event.target;
 
-            document.addEventListener('click', function(event){
+            if (event.target.classList.contains('county-btn')) {
+              const state = event.target.getAttribute('data-state');
+              const county = event.target.getAttribute('data-county');
+              openSidebar(state, county, colorData);
+            }
+          });
 
-              lastFocusedElement = event.target;
-
-              if (event.target.classList.contains('county-btn')) {
-                const state = event.target.getAttribute('data-state');
-                const county = event.target.getAttribute('data-county');
-                openSidebar(state, county, colorData);
+          L.geoJson(statesData, {
+            style: function(feature) {
+              const stateName = feature.properties.name;
+              let assignedColor = "#cccccc";
+              
+              if (colorData[stateName] && colorData[stateName].Color) {
+                assignedColor = colorData[stateName].Color;
               }
-            });
 
-
-            L.geoJson(statesData, {
-                style: function(feature) {
-
-
-                const stateName = feature.properties.name;
-                let assignedColor = "#cccccc"; // Fallback color if state isn't found
-                
+              return {
+                fillColor: assignedColor,
+                weight: 1.5,
+                opacity: 1,
+                color: 'white', 
+                fillOpacity: 0.6 
+              };
+            },
             
-                if (colorData[stateName] && colorData[stateName].Color) {
-                    assignedColor = colorData[stateName].Color;
-                }
+            onEachFeature: function(feature, layer) {
+              if (feature.properties && feature.properties.name) {
+                layer.bindPopup(buildPopupHTML(feature.properties.name, colorData), {
+                  autoPan: false
+                });
+              }
+              
+              layer.on('add', function() {
+                const e = layer._path;
 
-                return {
-                    fillColor: assignedColor,
-                    weight: 1.5,
-                    opacity: 1,
-                    color: 'white', 
-                    fillOpacity: 0.6 
-                };
-                },
-                
-                onEachFeature: function(feature, layer) {
-                    if (feature.properties && feature.properties.name) {
-                        layer.bindPopup(buildPopupHTML(feature.properties.name, colorData), {
-                          autoPan: false
-                        });
+                e.setAttribute('tabindex', '0');
+                e.setAttribute('role', 'button');
+                e.setAttribute('aria-haspopup', 'dialog');
+                e.setAttribute('aria-expanded', 'false');
+                e.setAttribute('aria-label', `${feature.properties.name}, status color is ${colorData[feature.properties.name]?.Color || 'unknown'}`);
+
+                e.style.outline = 'none';
+
+                e.addEventListener('focus', () => {
+                  e.setAttribute('stroke', 'black');
+                  e.setAttribute('stroke-width', '2');
+
+                  if (!isJustClosed && !layer.isPopupOpen()) {
+                    layer.openPopup();
+                  }
+                });
+
+                e.addEventListener('focusout', () => {
+                  e.setAttribute('stroke', 'white');
+                  e.setAttribute('stroke-width', '2');
+                });
+
+                e.addEventListener('keydown', (evt) => {
+                  if (evt.key === 'Enter' || evt.key === ' ' || evt.key === 'ArrowDown') {
+                    evt.preventDefault();
+                    if (!layer.isPopupOpen()) {
+                      layer.openPopup();
                     }
-                    layer.on('add', function() {
-                        const e = layer._path; // grab svg element path
-
-                        e.setAttribute('tabindex', '0');
-                        e.setAttribute('role', 'button');
-                        e.setAttribute('aria-label', `${feature.properties.name}, status color is ${colorData[feature.properties.name].Color}`);
-
-                        e.style.outline = 'none';
-                        e.addEventListener('focus', () => {
-                            e.setAttribute('stroke', 'black');
-                            e.setAttribute('stroke-width', '2');
-                        });
-                        e.addEventListener('focusout', () => {
-                            e.setAttribute('stroke', 'white');
-                            e.setAttribute('stroke-width', '2');
-                        });
-                        
-                        
-                        e.addEventListener('keydown', (evt) => {
-                            if (evt.key === 'Enter' || evt.key === ' ') {
-                                evt.preventDefault(); // Prevents Spacebar from scrolling the page
-                                
-                                // Instead of manually opening the popup, tell Leaflet to trigger 
-                                // its own click event. This ensures the popup opens at the correct coordinates.
-                                layer.fire('click');
-                            }
-                        });
-
-                    });
-                }
-            }).addTo(map);
-
-            }).catch(err => console.error("Error loading the color JSON:", err));
-
-            const legend = L.control({ position: 'bottomleft' });
-
-            legend.onAdd = function (map) {
-              const div = L.DomUtil.create('div', 'info legend');
-
-              const categories = [
-                { color: 'green', label: 'Under Consideration' },
-                { color: 'blue', label: 'In Use' },
-                { color: 'purple', label: 'Abandoned' },
-                { color: 'grey', label: 'No Record' }
-              ];
-
-              div.innerHTML = '<h4>Legend</h4>';
-
-              categories.forEach(item => {
-                div.innerHTML += `
-                  <div class="legend-item">
-                    <i style="background: ${item.color};"></i>
-                    <span>${item.label}</span>
-                  </div>
-                `;
+                  }
+                });
               });
+            }
+          }).addTo(map);
 
-              return div;
-            };
-            legend.addTo(map);
+        }).catch(err => console.error("Error loading the color JSON:", err));
 
+      const legend = L.control({ position: 'bottomleft' });
 
-        setTimeout(() => map.invalidateSize(), 100);
+      legend.onAdd = function (map) {
+        const div = L.DomUtil.create('div', 'info legend');
+
+        const categories = [
+          { color: 'green', label: 'Under Consideration' },
+          { color: 'blue', label: 'In Use' },
+          { color: 'purple', label: 'Abandoned' },
+          { color: 'grey', label: 'No Record' }
+        ];
+
+        div.innerHTML = '<h4>Legend</h4>';
+
+        categories.forEach(item => {
+          div.innerHTML += `
+            <div class="legend-item">
+              <i style="background: ${item.color};"></i>
+              <span>${item.label}</span>
+            </div>
+          `;
+        });
+
+        return div;
+      };
+      legend.addTo(map);
+
+      setTimeout(() => map.invalidateSize(), 100);
     </script>
 
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-        }
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
 
-        main {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 64px);
-            padding: 0;
-            margin: 0;
-        }
+      main {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 64px);
+        padding: 0;
+        margin: 0;
+      }
 
-        #map {
-            width: 100%;
-            height: 100%;
-            flex: 1;
-        }
+      #map {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+      }
     </style>
   </body>
 </html>

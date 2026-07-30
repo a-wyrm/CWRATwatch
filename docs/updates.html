@@ -15,11 +15,36 @@
             <div id="header-title">CWRAT Adoption Map</div>
             <div id="header-nav">
                 <a href="../src/templates/map.html">Map</a>
-                <a href="#" class="active">Info</a>
+                <a href="../docs/about.html">About</a>
+                <a href="#" class="active">Update</a>
             </div>
         </nav>
     </header>
     <main id="content">
+        <h1>
+            Updates
+        </h1>
+
+        <div id="updates-container"></div>
+
+        <script>
+            fetch('../../../data/updates.json').then(response => response.json()).then(updateData => {
+                let html = ``
+                for (const year in updateData) {
+                    html += `<h2 style="font-size: 30px;">${year}</h2>`
+                    const months = updateData[year].months;
+                    for (const month in months) {
+                        html += `<div style="font-size: 20px; font-weight: bold; margin-left: 10px;">${month}</div>`
+                        const updates = months[month];
+                        for (const updateKey in updates) {
+                            html += `<p style="margin-left: 30px;">${updateKey}</p>`
+                        }
+                    }
+                }
+                document.getElementById('updates-container').innerHTML = html;
+          
+            }).catch(err => console.error("Error loading JSON:", err));
+        </script>
 
     </main>
 </body>
