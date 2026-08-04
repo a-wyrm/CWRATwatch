@@ -14,8 +14,8 @@
         <nav id="header-bar">
             <div id="header-title">CWRAT Adoption Map</div>
             <div id="header-nav">
-                <a href="../src/templates/map.html">Map</a>
-                <a href="../docs/about.html">About</a>
+                <a href="./map.html">Map</a>
+                <a href="./about.html">About</a>
                 <a href="#" class="active">Updates</a>
             </div>
         </nav>
@@ -28,7 +28,7 @@
         <div id="updates-container"></div>
 
         <script>
-            fetch('../../../data/updates.json').then(response => response.json()).then(updateData => {
+            fetch('./data/updates.json').then(response => response.json()).then(updateData => {
                 let html = ``
                 for (const year in updateData) {
                     html += `<h2 style="font-size: 30px;">${year}</h2>`
