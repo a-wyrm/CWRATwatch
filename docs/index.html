@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CWRAT Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="./css/styles.css">
+  </head>
+  <body>
+    <header>
+      <nav id="header-bar">
+        <div id="header-left">
+          <div id="header-title">CWRAT Map</div>
+        </div>
+        <div id="header-nav">
+          <a href="#" class="active">Map</a>
+          <a href="./about.html">About</a>
+          <a href="./updates.html">Updates</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+
+      <!-- role="application" tells NVDA to pass Tab and Arrow keys directly to JS -->
+      <div id="map" role="application" aria-label="Interactive CWRAT Map. Use Tab or Arrow keys to navigate states."></div>
+      <div id="sidebar" class="sidebar">
+        <button id="sidebar-close" class="sidebar-close" onclick="closeSidebar()">&times;</button>
+        <div id="sidebar-content"></div>
+      </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="../data/states_outline.js"></script>
+    <script>
+
+      let lastFocusedElement = null;
+      let statePaths = [];
+      let isJustClosed = false;
+
+      const map = L.map('map').setView([39.8283, -98.5795], 4);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
+
+      map.on('popupopen', function(e) {
+        const popupEl = e.popup.getElement();
+        if (!popupEl) return;
+
+        popupEl.setAttribute('role', 'dialog');
+        popupEl.setAttribute('aria-modal', 'true');
+
+        const titleEl = popupEl.querySelector('[id^="popup-title-"]');
+        if (titleEl) {
+          popupEl.setAttribute('aria-labelledby', titleEl.id);
+        }
+
+        const closeBtn = popupEl.querySelector('.leaflet-popup-close-button');
+        if (closeBtn) {
+          closeBtn.setAttribute('role', 'button');
+          closeBtn.setAttribute('aria-label', 'Close menu');
+        }
+
+        if (e.popup._source && e.popup._source._path) {
+          e.popup._source._path.setAttribute('aria-expanded', 'true');
+        }
+
+        setTimeout(() => {
+          const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+          const focusables = Array.from(popupEl.querySelectorAll(focusableSelectors));
+
+          if (focusables.length > 0) {
+            focusables[0].focus({ preventScroll: true });
+
+            // Trap Tab key inside popup until exited
+            const trapFocus = function(evt) {
+              if (evt.key === 'Escape') {
+                map.closePopup(e.popup);
+                return;
+              }
+
+              if (evt.key === 'Tab') {
+                const currentFocusables = Array.from(popupEl.querySelectorAll(focusableSelectors));
+                if (currentFocusables.length === 0) return;
+                const first = currentFocusables[0];
+                const last = currentFocusables[currentFocusables.length - 1];
+
+                if (evt.shiftKey && document.activeElement === first) {
+                  evt.preventDefault();
+                  last.focus();
+                } else if (!evt.shiftKey && document.activeElement === last) {
+                  evt.preventDefault();
+                  first.focus();
+                }
+              }
+            };
+
+            popupEl.addEventListener('keydown', trapFocus);
+            popupEl._trapFocusListener = trapFocus;
+          } else {
+            popupEl.setAttribute('tabindex', '-1');
+            popupEl.focus({ preventScroll: true });
+          }
+        }, 100);
+      });
+
+      map.on('popupclose', function(e) {
+        isJustClosed = true;
+
+        const popupEl = e.popup.getElement();
+        const currentPath = e.popup._source ? e.popup._source._path : null;
+
+        if (popupEl && popupEl._trapFocusListener) {
+          popupEl.removeEventListener('keydown', popupEl._trapFocusListener);
+        }
+
+        if (e.popup._source && e.popup._source._path) {
+          e.popup._source._path.setAttribute('aria-expanded', 'false');
+        }
+
+        if (currentPath) {
+          setTimeout(() => {
+            currentPath.focus({ preventScroll: true });
+            setTimeout(() => { isJustClosed = false; }, 150);
+          }, 50);
+        } else {
+          isJustClosed = false;
+        }
+      });
+
+      function closeSidebar() {
+        var sb = document.getElementById('sidebar');
+        sb.classList.remove('open');
+
+        const content = document.getElementById('sidebar-content');
+        content.innerHTML = '';
+
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+        }
+      }
+
+      function openSidebar(stateName, countyName, colorData) {
+        const countyob = colorData[stateName]?.Counties?.[countyName];
+
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('sidebar-content');
+        if (!countyob) return;
+
+        let details = `<h2>${countyName}, ${stateName}</h2>`;
+        for (var [key, value] of Object.entries(countyob)) {
+        if (key === 'Overall expenditure' || key === 'Access Information') {
+          details += `<h3>${key}</h3>`;
+          details += `<table class="sidebar-table">`;
+          details += `<thead><tr><th>Entity</th><th>Details / Amount</th></tr></thead><tbody>`;
+
+          if (typeof value === 'object' && value !== null && value.Row && value.Column) {
+            let rows = value.Row.split(',').map(item => item.trim()).filter(Boolean);
+            let cols = value.Column.split(',').map(item => item.trim()).filter(Boolean);
+
+            if (rows.length === 1) {
+              details += `<tr><td>${value.Row.trim()}</td><td>${value.Column.trim()}</td></tr>`;
+            } else {
+              const maxLength = Math.max(rows.length, cols.length);
+              for (let i = 0; i < maxLength; i++) {
+                details += `<tr><td>${rows[i] || ''}</td><td>${cols[i] || ''}</td></tr>`;
+              }
+            }
+          }
+          details += `</tbody></table>`;
+        }
+        else if (key === 'Predictors') {
+          details += `<h3>${key}</h3><ul class="predictors-list">`;
+          
+          const sentences = value.split('.').map(s => s.trim()).filter(Boolean);
+          sentences.forEach(sentence => {
+            details += `<li>${sentence}.</li>`;
+          });
+          
+          details += `</ul>`;
+        }
+        else {
+          details += `<p><strong>${key}:</strong> ${value}</p>`;
+        }
+      }
+
+        details += "<div style='margin-top: 30px;'></div>"
+
+        content.innerHTML = details;
+        sidebar.classList.add('open');
+
+        const closeBtn = document.getElementById('sidebar-close');
+        if (closeBtn) {
+          setTimeout(() => closeBtn.focus(), 100); 
+        }
+      }
+
+      function buildPopupHTML(stateName, colorData) {
+        const stateData = colorData[stateName];
+        const cleanStateId = stateName.replace(/[^a-zA-Z0-9]/g, '');
+        const titleId = `popup-title-${cleanStateId}`;
+
+        let html = `<h3 id="${titleId}" style="margin: 0 0 6px 0; font-size: 16px;">${stateName}</h3>`;
+
+        if (stateData && stateData.Counties) {
+          html += `<div style="margin-top: 6px;"><strong>Counties:</strong></div>`;
+          html += `<ul class="popup-county-list">`;
+
+          for (const countyName of Object.keys(stateData.Counties)) {
+            html += `
+              <li>
+                <button 
+                  class="county-btn" 
+                  data-state="${stateName}" 
+                  data-county="${countyName}"
+                >
+                  ${countyName}
+                </button>
+              </li>`;
+          }
+
+          html += `</ul>`;
+        } 
+        else {
+          html += `<p style="margin: 4px 0 0; font-size: 12px; color: #666;">No county data available.</p>`;
+        }
+
+        return html;
+      }
+
+      fetch('../../../data/states_data.json')
+        .then(response => response.json())
+        .then(colorData => {
+
+          document.addEventListener('click', function(event){
+            lastFocusedElement = event.target;
+
+            if (event.target.classList.contains('county-btn')) {
+              const state = event.target.getAttribute('data-state');
+              const county = event.target.getAttribute('data-county');
+              openSidebar(state, county, colorData);
+            }
+          });
+
+          L.geoJson(statesData, {
+            style: function(feature) {
+              const stateName = feature.properties.name;
+              let assignedColor = "#cccccc";
+              
+              if (colorData[stateName] && colorData[stateName].Color) {
+                assignedColor = colorData[stateName].Color;
+              }
+
+              return {
+                fillColor: assignedColor,
+                weight: 1.5,
+                opacity: 1,
+                color: 'white', 
+                fillOpacity: 0.6 
+              };
+            },
+            
+            onEachFeature: function(feature, layer) {
+              if (feature.properties && feature.properties.name) {
+                layer.bindPopup(buildPopupHTML(feature.properties.name, colorData), {
+                  autoPan: false
+                });
+              }
+              
+              layer.on('add', function() {
+                const e = layer._path;
+
+                e.setAttribute('tabindex', '0');
+                e.setAttribute('role', 'button');
+                e.setAttribute('aria-haspopup', 'dialog');
+                e.setAttribute('aria-expanded', 'false');
+                e.setAttribute('aria-label', `${feature.properties.name}, status color is ${colorData[feature.properties.name]?.Color || 'unknown'}`);
+
+                e.style.outline = 'none';
+
+                e.addEventListener('focus', () => {
+                  e.setAttribute('stroke', 'black');
+                  e.setAttribute('stroke-width', '2');
+
+                  if (!isJustClosed && !layer.isPopupOpen()) {
+                    layer.openPopup();
+                  }
+                });
+
+                e.addEventListener('focusout', () => {
+                  e.setAttribute('stroke', 'white');
+                  e.setAttribute('stroke-width', '2');
+                });
+
+                e.addEventListener('keydown', (evt) => {
+                  if (evt.key === 'Enter' || evt.key === ' ' || evt.key === 'ArrowDown') {
+                    evt.preventDefault();
+                    if (!layer.isPopupOpen()) {
+                      layer.openPopup();
+                    }
+                  }
+                });
+              });
+            }
+          }).addTo(map);
+
+        }).catch(err => console.error("Error loading the color JSON:", err));
+
+      const legend = L.control({ position: 'bottomleft' });
+
+      legend.onAdd = function (map) {
+        const div = L.DomUtil.create('div', 'info legend');
+
+        const categories = [
+          { color: 'green', label: 'Under Consideration' },
+          { color: 'blue', label: 'In Use' },
+          { color: 'purple', label: 'Abandoned' },
+          { color: 'grey', label: 'No Record' }
+        ];
+
+        div.innerHTML = '<h4>Legend</h4>';
+
+        categories.forEach(item => {
+          div.innerHTML += `
+            <div class="legend-item">
+              <i style="background: ${item.color};"></i>
+              <span>${item.label}</span>
+            </div>
+          `;
+        });
+
+        return div;
+      };
+      legend.addTo(map);
+
+      setTimeout(() => map.invalidateSize(), 100);
+    </script>
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 64px);
+        padding: 0;
+        margin: 0;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </body>
+</html>
