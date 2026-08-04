@@ -173,9 +173,8 @@
         {
             "Color": "blue",
             "Counties": {
-                "Alleghany": {
-                        "Population": "291,247",
-                        "Overview": "Contains over 40% of the state's population."
+                "Allegheny": {
+                        "TODO": "TODO"
                 }
             }
         },

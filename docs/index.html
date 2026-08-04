@@ -32,7 +32,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script src="../data/states_outline.js"></script>
+    <script src="./data/states_outline.js"></script>
     <script>
 
       let lastFocusedElement = null;
@@ -230,7 +230,7 @@
         return html;
       }
 
-      fetch('../../../data/states_data.json')
+      fetch('./data/states_data.json')
         .then(response => response.json())
         .then(colorData => {
 
