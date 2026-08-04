@@ -151,8 +151,42 @@
 
         let details = `<h2>${countyName}, ${stateName}</h2>`;
         for (var [key, value] of Object.entries(countyob)) {
+        if (key === 'Overall expenditure' || key === 'Access Information') {
+          details += `<h3>${key}</h3>`;
+          details += `<table class="sidebar-table">`;
+          details += `<thead><tr><th>Entity</th><th>Details / Amount</th></tr></thead><tbody>`;
+
+          if (typeof value === 'object' && value !== null && value.Row && value.Column) {
+            let rows = value.Row.split(',').map(item => item.trim()).filter(Boolean);
+            let cols = value.Column.split(',').map(item => item.trim()).filter(Boolean);
+
+            if (rows.length === 1) {
+              details += `<tr><td>${value.Row.trim()}</td><td>${value.Column.trim()}</td></tr>`;
+            } else {
+              const maxLength = Math.max(rows.length, cols.length);
+              for (let i = 0; i < maxLength; i++) {
+                details += `<tr><td>${rows[i] || ''}</td><td>${cols[i] || ''}</td></tr>`;
+              }
+            }
+          }
+          details += `</tbody></table>`;
+        }
+        else if (key === 'Predictors') {
+          details += `<h3>${key}</h3><ul class="predictors-list">`;
+          
+          const sentences = value.split('.').map(s => s.trim()).filter(Boolean);
+          sentences.forEach(sentence => {
+            details += `<li>${sentence}.</li>`;
+          });
+          
+          details += `</ul>`;
+        }
+        else {
           details += `<p><strong>${key}:</strong> ${value}</p>`;
         }
+      }
+
+        details += "<div style='margin-top: 30px;'></div>"
 
         content.innerHTML = details;
         sidebar.classList.add('open');

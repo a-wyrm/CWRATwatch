@@ -69,10 +69,10 @@ body:has(#content) {
 }
 #header-nav a.active {
   text-decoration: underline;
-  color: #007950;
+  color: #080079;
 }
 #header-nav a:hover {
-  color: #007950;
+  color: #080079;
 }
 #header-nav #donate-link {
   background: #007950;
@@ -86,7 +86,7 @@ body:has(#content) {
   border: none;
 }
 #header-nav #donate-link:hover {
-  background: #009865;
+  background: #080079;
 }
 main {
   flex: 1;
@@ -133,16 +133,16 @@ p {
   color: #222;
 }
 a {
-  color: #007950;
+  color: #080079;
   text-decoration: underline;
   transition: color 0.2s, text-decoration 0.2s;
 }
 a:hover {
-  color: #009865;
+  color: #080079;
   text-decoration: underline;
 }
 a:visited {
-  color: #006640;
+  color: #080079;
 }
 .info-logo {
   text-align: center;
