@@ -356,6 +356,29 @@ blockquote p {
   text-align: left;
 }
 
+.predictors-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5em;
+}
+
+.predictors-table th,
+.predictors-table td {
+  border: 1px solid #d9d9d9;
+  padding: 0.8em 1em;
+  text-align: left;
+  vertical-align: top;
+}
+
+.predictors-table th {
+  background: #f3f3f3;
+}
+
+.county-content > a {
+  display: inline-block;
+  margin-bottom: 1em;
+}
+
 .county-btn:hover {
   color: #003399;
 }

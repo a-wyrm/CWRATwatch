@@ -6,7 +6,13 @@
         },
     "Alaska":
         {
-            "Color": "purple"
+            "Color": "purple",
+            "Counties" : {
+                "Statewide":{
+                    "Discontinuation Information": "Per ACLU's reporting, the Eckerd Kids predictive modeling software was discontinued due to <a href='https://web.archive.org/web/20210425164950/http://dhss.alaska.gov/ocs/Documents/Publications/pdf/2019_APSR.pdf' target='_blank'>``difficulties in implementation and questions results''</a>."
+                }
+           
+            }
         },
     "Arizona":
         {
@@ -35,7 +41,117 @@
                             "Column": "Access view or use data on County network, Access view or use data on County network, Access view or use data on County network, Collaboration with parties, Collaboration with parties "
                         },
                         "Security and privacy information": "Uses Philter to deidentify data, uses a development environment, must use username and password.",
-                        "Predictors": "The assessment tracks the age at referral of the focus child. It records the number of prior screened-in referrals for the focus child. It records the number of prior screened-in referrals in the past 90 days for the focus child. It records the number of prior screened-out referrals in the past 90 days for the focus child. It tracks the number of days since the last referral for the focus child. It tracks the number of prior findings for the focus child. It tracks the number of prior findings in the past 90 days for the focus child. It counts the number of prior referrals for the focus child alleging drug use. It counts the number of prior referrals for the focus child alleging neglect. It counts the number of prior referrals for the focus child alleging sexual abuse. It counts the number of prior referrals for the focus child alleging emotional abuse. It counts the number of prior referrals for the focus child alleging other abuse. It records the number of prior placements in the past 90 days for the focus child. It notes whether the focus child is female. It notes whether the focus child is reported as a sibling in the referral. It notes whether the focus child is a youth in conflict in the referral. It notes whether the focus child has ever had a screened-in referral. It notes whether the focus child has ever had a screened-out referral. It notes whether the focus child has been active in court. It notes whether the focus child has been active in CYF. It notes whether the focus child has ever had findings. It notes whether the focus child has ever been placed. It records the mother count on the referral. It counts the number of parents under age 13, aged 13 to 19, aged 20 to 24, aged 45 to 54, or aged 65 and over. It calculates the number of days from the last referral for parents. It counts the number of prior referrals involving parents with an allegation of neglect. It counts the number of prior referrals involving parents with an allegation of sexual abuse. It counts the number of prior referrals involving parents with an allegation of emotional abuse. It records the number of prior placements for parents. It notes whether parents have ever had a screened-in referral. It notes whether parents have ever had a screened-out referral. It notes whether parents have been involved in court. It notes whether parents have been involved in CYF. It notes whether parents have ever had findings. It records the number of female alleged perpetrators. It counts the number of alleged perpetrators under age 13, aged 13 to 19, aged 20 to 24, aged 35 to 44, aged 45 to 54, aged 55 to 64, or aged 65 and over. It records the number of prior screened-in referrals for alleged perpetrators. It calculates the number of days from the last referral for alleged perpetrators. It counts the number of prior referrals involving alleged perpetrators with an allegation of drug use. It counts the number of prior referrals involving alleged perpetrators with an allegation of neglect. It counts the number of prior referrals involving alleged perpetrators with an allegation of sexual abuse. It counts the number of prior referrals involving alleged perpetrators with an allegation of physical abuse. It records the number of prior placements for alleged perpetrators. It notes whether alleged perpetrators have ever had a screened-in referral. It notes whether alleged perpetrators have ever had a screened-out referral. It notes whether alleged perpetrators have been involved in court. It notes whether alleged perpetrators have ever had findings. It notes whether alleged perpetrators have ever been placed. It counts the number of other children of toddler age. It counts the number of other children of preschool age. It counts the number of other children of school age. It records the number of prior screened-in referrals in the past 90 days for other children. It calculates the number of days from the last referral for other children. It counts the number of prior referrals involving other children with an allegation of drug use. It counts the number of prior referrals involving other children with an allegation of sexual abuse. It counts the number of prior referrals involving other children with an allegation of emotional abuse. It notes whether other children have been active in CYF. It counts the number of other adults aged 13 to 19, aged 20 to 24, aged 25 to 34, aged 55 to 64, or aged 65 and over. It counts the number of prior referrals involving other adults with an allegation of domestic violence. It notes whether other adults have ever been placed. It records the number of victims associated with the referral. It notes whether three or more other children are associated with the referral. It records the number of alleged perpetrators associated with the referral. It records the number of parents associated with the referral. It notes whether the referral day is Monday, Sunday. It notes whether the referral month is March, May, July, August, September, November, December."
+                        "Predictors":
+                            {
+                                "unknown (age)": "Age at referral of the focus child", 
+                                "unknown (prior screening)": "Number of prior screened-in referrals for the focus child",
+                                "unknown (prior screening 3 months)": "Number of prior screened-in referrals for the focus child in the past 90 days",
+                                "unknown (prior screening referrals 3 months)": "Number of prior screened-out referrals in the past 90 days for the focus child", 
+                                "unknown (last referral)": "Number of days since the last referral for the focus child",
+                                "unknown (number of findings)": "Number of prior findings for focus child",
+                                "unknown (prior findings in 3 months)": "Number of prior findings in the past 90 days for focus child", 
+                                "unknown (prior referrals drug use)": "Number of prior referrals for focus child alleging drug use",
+                                "unknown (prior referrals neglect)": "Number of prior referrals for focus child alleging neglect",
+                                "unknown (prior referrals sexual abuse)": "Number of prior referrals for focus child alleging sexual abuse", 
+                                "unknown (prior referrals emotional abuse)": "Number of prior referrals for focus child alleging emotional abuse",
+                                "unknown (prior referrals other abuse)": "Number of prior referrals for focus child alleging other abuse",
+                                "unknown (prior placements)": "Number of prior placements in the past 90 days for focus child", 
+                                "unknown (female child)": "Is focus child female",
+                                "unknown (focus child is sibling)": "Is the focus child reported as sibling in the referral",
+                                "unknown (youth in conflict)": "Is the focus child a youth in conflict in the referral", 
+                                "unknown (ever screened in)": "Has the focus child ever had a screened in referral",
+                                "unknown (ever screened out)": "Has the focus child ever had a screened out referral",
+                                "unknown (active in court)": "Has the focus child been active in court", 
+                                "unknown (prior involvement in CYF)": "Has the focus child been active in child youth and family services",
+                                "unknown (prior findings)": "Has the focus child ever had findings",
+                                "unknown (prior placement)": "Has the focus child ever been placed", 
+                                "unknown (mom count)": "Mom count on referral",
+                                "unknown (parents < 13)": "Number of parents in age less than 13",
+                                "unknown (parents 13-19)": "Number of parents in age 13-19", 
+                                "unknown (parents 20-24)": "Number of parents in age 20-24",
+                                "unknown (parents 45-54)": "Number of parents in age 45-54",
+                                "unknown (parents 65+)": "Number of parents in age 65 and over", 
+                                "unknown (last referral for parents)": "Number of days from last referral for parents",
+                                "unknown (referrals with neglect)": "Number of prior referrals involving parents with allegation of neglect",
+                                "unknown (referrals with sexual abuse)": "Number of prior referrals involving parents with allegation of sexual abuse", 
+                                "unknown (referrals with emotional abuse)": "Number of prior referrals involving parents with allegation of emotional abuse",
+                                "unknown (prior placements for parents)": "Number of prior placements for parents",
+                                "unknown (screened in parents)": "Have parents ever had a screened in referral", 
+                                "unknown (screened out parents)": "Have parents ever had a screened-out referral",
+                                "unknown (parents court)": "Have parents been involved in court",
+                                "unknown (parents CYF)": "Have parents been involved in child youth and family services", 
+                                "unknown (parent findings)": "Have parents ever had findings",
+                                "unknown (female perpetrators)": "Number of female alleged perpetrators",
+                                "unknown (perpetrators < 13)": "Number of alleged perpetrators in age less than 13", 
+                                "unknown (perpetrators 13-19)": "Number of alleged perpetrators in age 13-19",
+                                "unknown (perpetrators 20-24)": "Number of alleged perpetrators in age 20-24",
+                                "unknown (perpetrators 35-44)": "Number of alleged perpetrators in age 35-44", 
+                                "unknown (perpetrators 45-54)": "Number of alleged perpetrators in age 45-54",
+                                "unknown (perpetrators 55-64)": "Number of alleged perpetrators in age 55-64",
+                                "unknown (perpetrators 64+)": "Number of alleged perpetrators in age 65 and over", 
+                                "unknown (screen-ins referrals)": "Number of prior screened in referrals for alleged perpetrators",
+                                "unknown (days since last referral perpetrators)": "Number of days from last referral for alleged perpetrators",
+                                "unknown (perpetrators drug abuse)": "Number of prior referrals involving alleged perpetrators with allegation of drug use", 
+                                "unknown (perpetrators neglect)": "Number of prior referrals involving alleged perpetrators with allegation of neglect",
+                                "unknown (perpetrators sexual abuse)": "Number of prior referrals involving alleged perpetrators with allegation of sexual abuse",
+                                "unknown (perpetrators physical abuse)": "Number of prior referrals involving alleged perpetrators with allegation of physical abuse", 
+                                "unknown (prior placements perpetrators)": "Number of prior placements for alleged perpetrators",
+                                "unknown (perpetrators screened in)": "Have alleged perpetrators ever had a screened in referral",
+                                "unknown (perpetrators screened out)": "Have alleged perpetrators ever had a screened-out referral", 
+                                "unknown (perpetrators court)": "Have alleged perpetrators been involved in court",
+                                "unknown (perpatrators findings)": "Have alleged perpetrators ever had findings ",
+                                "unknown (perpetrators placed)": "Have alleged perpetrators ever been placed", 
+                                "unknown (toddler)": "Number of other children in toddler age",
+                                "unknown (pre-school age)": "Number of other children with pre-school age",
+                                "unknown (school age)": "Number of other children in school age", 
+                                "unknown (90 day other children)": "Number of prior screened in referrals in the past 90 days for other children",
+                                "unknown (referral other children)": "Number of days from last referral for other children",
+                                "unknown (other children drug use)": "Number of prior referrals involving other children with allegation of drug use", 
+                                "unknown (other children sexual abuse)": "Number of prior referrals involving other children with allegation of sexual abuse",
+                                "unknown (other children emotional abuse)": "Number of prior referrals involving other children with allegation of emotional abuse",
+                                "unknown (other children CYF)": "Have other children been active in CYF",
+                                "unknown (others 13-19)": "Number of other adults in age 13-19", 
+                                "unknown (others 20-24)": "Number of other adults in age 20-24",
+                                "unknown (others 25-34)": "Number of other adults in age 25-34",
+                                "unknown (others 55-64)": "Number of other adults in age 55-64",
+                                "unknown (others 65+)": "Number of other adults in age 65 and over", 
+                                "unknown (others domestic violence)": "Number of prior referrals involving other adults with allegation of domestic violence",
+                                "unknown (others placed)": "Have other adults been ever placed", 
+                                "unknown (number of victims)": "Number of Victims associated with the referral",
+                                "unknown (3 children with referral)": "Is 3 or more Other Children associated with the referral",
+                                "unknown (number of perpetrators)": "Number of Alleged perpetrators associated with the referral", 
+                                "unknown (number of parents)": "Number of Parents associated with the referral",
+                                "unknown (monday)": "Is referred day Monday",
+                                "unknown (sunday)": "Is referred day Sunday", 
+                                "unknown (march)": "Is referred month March",
+                                "unknown (may)": "Is referred month May",
+                                "unknown (july)": "Is referred month July", 
+                                "unknown (august)": "Is referred month August",
+                                "unknown (september)": "Is referred month September",
+                                "unknown (november)": "Is referred month November", 
+                                "unknown (december)": "Is referred month December"
+                            }
+                },
+                "Arapahoe": {
+                    "Name": "Arapahoe County Decision Aid",
+                        "Overall expenditure": {
+                            "Row": "Social Data Analytics LLC",
+                            "Column": "11,250"
+                        },
+                        "Access Information": {
+                            "Row": "Centre for Social Data Analytics, Analytics for Change LCC, University of North Carolina Chapel Hill",
+                            "Column": "Unknown, unkown"
+                        },
+                        "Security and privacy information": "Uses Philter to deidentify data, uses a development environment, must use username and password.",
+                        "Predictors": {
+                            "unknown (current allegation)": "Current allegations", 
+                            "unknown (numbor of priors)": "Number of prior Assessment",
+                            "unknown (prior assessments neglect)": "Number of Prior Assessments with Neglect and Abuse",
+                            "unknown (number/age of children)": "Number of children, age of children", 
+                            "unknown (age of caregiver)": "Age of Primary Caregiver",
+                            "unknown (CPS removal)": "History of CPS removal"
+                            
+                        }
                 }
             }
             
@@ -174,7 +290,21 @@
             "Color": "blue",
             "Counties": {
                 "Allegheny": {
-                        "TODO": "TODO"
+                        "Name": "Douglas County Decision Aid",
+                        "Overall expenditure": {
+                            "Row": "Social Data Analytics LLC",
+                            "Column": "301,500"
+                        },
+                        "Access Information": {
+                            "Row": "Centre for Social Data Analytics, Analytics for Change LCC, Software Solutions Lab, University of North Carolina Chapel Hill, Cornell University",
+                            "Column": "Access view or use data on County network, Access view or use data on County network, Access view or use data on County network, Collaboration with parties, Collaboration with parties "
+                        },
+                        "Security and privacy information": "Uses Philter to deidentify data, uses a development environment, must use username and password.",
+                        "Predictors":
+                            {
+                                "name": "here", 
+                                "PREDICTOR_DESCRIPTION": "2"
+                            }
                 }
             }
         },

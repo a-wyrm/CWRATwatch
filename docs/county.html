@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>County Predictors | CWRAT Adoption Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/styles.css">
+  </head>
+  <body>
+    <header>
+      <nav id="header-bar">
+        <div id="header-title">CWRAT Adoption Map</div>
+        <div id="header-nav">
+          <a href="./index.html">Map</a>
+          <a href="./about.html">About</a>
+          <a href="./updates.html">Updates</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="content" class="county-content">
+      <a href="./index.html">Back to map</a>
+      <h1 id="county-title">County predictors</h1>
+      <table class="predictors-table" aria-describedby="county-title">
+        <thead>
+          <tr>
+            <th scope="col">Predictor Internal Name</th>
+            <th scope="col">PREDICTOR DESCRIPTION</th>
+          </tr>
+        </thead>
+        <tbody id="predictors-body">
+          <tr><td colspan="2">Loading predictors...</td></tr>
+        </tbody>
+      </table>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const stateName = params.get('state');
+      const countyName = params.get('county');
+      const title = document.getElementById('county-title');
+      const body = document.getElementById('predictors-body');
+
+      function setMessage(message) {
+        body.innerHTML = `<tr><td colspan="2">${message}</td></tr>`;
+      }
+
+      if (!stateName || !countyName) {
+        title.textContent = 'County not specified';
+        setMessage('No county was specified in this URL.');
+      } 
+      else {
+        title.textContent = `${countyName} County, ${stateName} predictors`;
+        document.title = `${countyName}, ${stateName} Predictors | CWRAT Adoption Map`;
+
+        fetch('./data/states_data.json')
+          .then(response => response.json())
+          .then(data => {
+            const countyData = data[stateName]?.Counties?.[countyName];
+            const countyPredictors = countyData?.Predictors;
+            
+
+            if (!countyPredictors) {
+              setMessage('No predictor data available for this county.');
+              return;
+            }
+
+            const rows = Object.entries(countyPredictors)
+              .map(([key, value]) => {
+                const displayValue = typeof value === 'object' && value !== null ? JSON.stringify(value): String(value ?? '');
+                return `<tr><td>${key}</td><td>${displayValue}</td></tr>`;
+              })
+              .join('');
+
+            body.innerHTML = rows;
+
+          })
+          .catch(() => setMessage('Unable to load predictor data.'));
+      }
+    </script>
+  </body>
+</html>

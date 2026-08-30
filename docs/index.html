@@ -172,14 +172,7 @@
           details += `</tbody></table>`;
         }
         else if (key === 'Predictors') {
-          details += `<h3>${key}</h3><ul class="predictors-list">`;
-          
-          const sentences = value.split('.').map(s => s.trim()).filter(Boolean);
-          sentences.forEach(sentence => {
-            details += `<li>${sentence}.</li>`;
-          });
-          
-          details += `</ul>`;
+          details += `<p><a href="./county.html?state=${encodeURIComponent(stateName)}&county=${encodeURIComponent(countyName)}">View predictors.</a></p>`;
         }
         else {
           details += `<p><strong>${key}:</strong> ${value}</p>`;
