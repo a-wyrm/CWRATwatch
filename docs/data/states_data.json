@@ -345,8 +345,8 @@
                             "Column": "301,500"
                         },
                         "Access Information": {
-                            "Row": "Centre for Social Data Analytics, Analytics for Change LCC, Software Solutions Lab, University of North Carolina Chapel Hill, Cornell University",
-                            "Column": "Access view or use data on County network, Access view or use data on County network, Access view or use data on County network, Collaboration with parties, Collaboration with parties "
+                            "Row": "Centre for Social Data Analytics / Analytics for Change LCC / Software Solutions Lab / University of North Carolina Chapel Hill / Cornell University",
+                            "Column": "Access view or use data on County network / Access view or use data on County network / Access view or use data on County network / Collaboration with parties / Collaboration with parties "
                         },
                         "Security and privacy information": "Uses Philter to deidentify data, uses a development environment, must use username and password.",
                         "Predictors":
@@ -447,8 +447,8 @@
                             "Column": "11,250"
                         },
                         "Access Information": {
-                            "Row": "Centre for Social Data Analytics, Analytics for Change LCC, University of North Carolina Chapel Hill",
-                            "Column": "Unknown, unkown"
+                            "Row": "Centre for Social Data Analytic / Analytics for Change LCC / University of North Carolina Chapel Hill",
+                            "Column": "Unknown / Unknown / Unknown"
                         },
                         "Security and privacy information": "Uses Philter to deidentify data, uses a development environment, must use username and password.",
                         "Predictors": {
@@ -518,7 +518,26 @@
         },
     "Maine":
         {
-            "Color": "blue"
+            "Color": "purple",
+            "Counties": {
+                "All": {
+                    "Name": "Eckerd Rapid Safety Feedback",
+                        "Overall expenditure": {
+                            "Row": "Eckerd Rapid Safety Feedback",
+                            "Column": "465,000"
+                        },
+                        "Access Information": {
+                            "Row": "Eckerd Rapid Safety Feedback",
+                            "Column": "Unknown"
+                        },
+                        "Security and privacy information": "Unknown",
+                        "Notes": "ACLU reported that Maine's use of Eckerd was ongoing in 2021, but from the files I got, I don't think this is the case since payments ceased in 2021.",
+                        "Predictors": {
+                            "none":"none"
+                            
+                        }
+                }
+            }
         },
     "Maryland":
         {
@@ -598,20 +617,144 @@
             "Color": "blue",
             "Counties": {
                 "Allegheny": {
-                        "Name": "Douglas County Decision Aid",
+                        "Name": "AFST",
                         "Overall expenditure": {
-                            "Row": "Social Data Analytics LLC",
-                            "Column": "301,500"
+                            "Row": "Data Warehouse Consultants LLC / Social Data Analytics LLC / AUT Ventures",
+                            "Column": "16,577,461 / 6,654,499.50 / 3,167,062.98"
                         },
                         "Access Information": {
-                            "Row": "Centre for Social Data Analytics, Analytics for Change LCC, Software Solutions Lab, University of North Carolina Chapel Hill, Cornell University",
-                            "Column": "Access view or use data on County network, Access view or use data on County network, Access view or use data on County network, Collaboration with parties, Collaboration with parties "
+                            "Row": "Data Warehouse Consultants LLC/ Social Data Analytics LLC / AUT Ventures",
+                            "Column": "Unknown / Unknown / Unknown"
                         },
-                        "Security and privacy information": "Uses Philter to deidentify data, uses a development environment, must use username and password.",
-                        "Predictors":
-                            {
-                                "key": "value"
-                            }
+                        "Security and privacy information": "Most information provided details how data collection is compliant with HIPAA.",
+                        "Predictors": {
+                            "INFANT_VIC_NULL": "=1 if the victim child <1 year of age at current referral; 0 otherwise",
+                            "TOD_VIC_NULL": "=1 if victim child is btw 1<=age<3; 0 otherwise",
+                            "SC1_VIC_NULL": "=1 if victim child btw 6<=age<9; 0 otherwise",
+                            "VIC_AGE_SC2_NULL": "=1 if victim child btw 9<=age<13; 0 otherwise",
+                            "TEEN_VIC_NULL": "=1 if victim child btw 13<=age<18; 0 otherwise",
+                            "VIC_1_NULL": "=1 if there's a single victim child in the referral; O otherwise",
+                            "AGE_AT_RFRL_MISS_VICT_SELF": "=1 if focal child has no age or invalid age; O otherwise",
+                            "CHLD_3_NULL": "=1 if there are 3 children involved in the referral who are not identified as victims of the referral; O otherwise",
+                            "CHLD AGE INF": "=1 if counts of the number of other involved children that are less than 1 year old at the time of referral; O otherwise",
+                            "CHLD_VICTIM_VICT_SELF": "=1 if focal child is specifically \"Alleged Victim Child\" (as opposed to just \"Child\"); 0 otherwise",
+                            "FEMALE NULL": "= 1 if victim is female; O otherwise",
+                            "BIO_DAD_NULL": "=1 if victim in this referral has a bio dad identified in the relationship table; O otherwise",
+                            "BIO MOM_NULL": "= 1 if victim in this referral has a bio mom identified in the relationship table; O otherwise",
+                            "PERP_O_NULL": "=1 if there is no perpetrator in the referral; O otherwise",
+                            "PERP_3_NULL": "=1 if there are 3 perpetrators in the referral; O otherwise",
+                            "PERP_AGE_5564_NULL": "counts of the number of perpetrators that are 55<=age<65",
+                            "PERP_AGE_65_NULL": "counts of the number of perpetrators that are more than 65",
+                            "PERP_FEMALES_NULL": "counts of the number of perpetrators that were female",
+                            "PRNT_O_NULL": "if there is no person identified as a parent in the referral",
+                            "PRNT_AGE_19_NULL": "counts of the number of parents that are 13<=age<20",
+                            "PRNT_AGE 2024_NULL": "counts of the number of parents that are 20<=age<25",
+                            "PRNT_AGE_4554_NULL": "counts of the number of parents that are 45<=age<55",
+                            "PRNT_AGE_65_NULL": "counts of the number of parents that are more than 65",
+                            "PRNT_OVER2_NULL": "if there are more than 2 individuals named on the referral identified as parents",
+                            "IN_AJD_CHLD": "= 1 if the child's MCI ID was created before the referral date; O otherwise",
+                            "IN_AJD_OTH": "= 1 if the person's MCI ID was created before the referral date; O otherwise",
+                            "IN_AJD_VICT_SELF": "=1 if the focal child's MCI ID was created before the referral date; O otherwise",
+                            "IN_HOUSEHOLD_NULL": "=1 if the victim is living in the mom's household; O otherwise (using InHousehold flag)",
+                            "REF_PAST365_COUNT_OTH": "aggregated no. of referrals in the past 365 days for all individuals involved with role of other (O if missing)",
+                            "REF_PAST365_COUNT_VICT_SELF": "aggregated no. of referrals in the past 365 days for the focal child (O if missing)",
+                            "REF_PAST548_COUNT_VICT_SELF": "aggregated no. of referrals in the past 548 days for the focal child (O if missing)",
+                            "REF_PAST90_COUNT_CHLD": "aggregated no. of referrals in the past 90 days for all individuals involved with role of child (O if missing)",
+                            "REF_PAST90_COUNT_VICT_SELF": "aggregated no. of referrals in the past 90 days for the focal child ( if missing)",
+                            "REFER_TIME_DAY_NULL": "=1 if the intake time for the current referral is in the AM; O otherwise",
+                            "PREVIOUS_RFRL_PERP": "=1 if the perpetrator has prior referrals; O otherwise",
+                            "PREVIOUS_RFRL_VICT_SELF": "=1 if the focal child has prior referrals",
+                            "FNDG_PAST365_COUNT_CHLD": "aggregated no. of founded allegations in the past 365 days for all individuals involved with role of child",
+                            "FNDG_PAST90_COUNT_CHLD": "aggregated no. of founded allegations in the past 90 days for all individuals involved with role of child",
+                            "SER_PAST180_COUNT_CHLD": "aggregated no. of case openings in the past 180 days for all individuals involved with role of child",
+                            "SER PAST180 COUNT PERP": "aggregated no. of case openings in the past 180 days for all individuals involved with role of perpetrator",
+                            "SER_PAST365_COUNT_CHLD": "aggregated no. of case openings in the past 365 days for all individuals involved with role of child",
+                            "SER_PAST548_COUNT_CHLD": "aggregated no. of case openings in the past 548 days for all individuals involved with role of child",
+                            "SER_PAST548_COUNT_OTH": "aggregated no. of case openings in the past 548 days for all individuals involved with role of other",
+                            "SER_PAST548_COUNT_PRNT": "aggregated no. of case openings in the past 548 days for all individuals involved with role of parent",
+                            "SER PAST548 COUNT VICT OTHR": "aggregated no. of case openings in the past 548 days for all individuals involved with role of other",
+                            "SER_PAST548_COUNT_VICT_SELF": "aggregated no. of case openings in the past 548 days for all individuals involved with role of victim",
+                            "PLSM_NOW_NULL": "= 1 if the referral was received during a placement episode; O otherwise",
+                            "PLSM_PAST180_COUNT_NULL": "victim's no. of placement episodes during the last 180 days",
+                            "PLSM_PAST180_DUMMY_NULL": "=1 if the victim was in placement during the last 180 days; O otherwise",
+                            "PLSM PAST365_COUNT_NULL": "victim's no. of placement episodes during the last 365 days",
+                            "PLSM_PAST365_DUMMY_NULL": "=1 if the victim was in placement during the last 365 days; O otherwise",
+                            "PLSM_PAST548_COUNT_NULL": "victim's no. of placement episodes during the last 548 days",
+                            "ALG_PR_12MONTHS_CNT_VICT_SELF": "Count of number of total duplicated allegations (regardless of Allegation High Level Category) reported for child in prior 365 days to current referral.",
+                            "ALGABS_CHLDBHVR_VICT_SELF": "=1 if the focal child has an allegation in the Child Behaviors category on this referral; O otherwise",
+                            "ALGABS_CRGVSUBABUSE_VICT_SELF": "=1 if the focal child has an allegation in the Caregiver Substance Abuse category on this referral; O otherwise",
+                            "ALGABS_IMMRISK_VICT_SELF": "=1 if the focal child has an allegation in the Imminent Risks category on this referral; O otherwise",
+                            "ALGABS_INADHOME_VICT_SELF": "=1 if the focal child has an allegation in the No/Inadequate Home category on this referral; O otherwise",
+                            "ALGABS_NEGLECT_VICT_SELF": "=1 if the focal child has an allegation in the Neglect category on this referral; O otherwise",
+                            "ALGABS_OTHER_VICT_SELF": "=1 if the focal child has an allegation in the Other category on this referral; O otherwise",
+                            "ALGABS_OTHREFSRC_VICT_SELF": "=1 if the focal child has an allegation in the Other Referral Source category on this referral; O otherwise",
+                            "ALGABS_PHYALT_VICT_SELF": "=1 if the focal child has an allegation in the Physical Altercation category on this referral; O otherwise",
+                            "ALGABS_PHYMALTRTMNT_VICT_SELF": "=1 if the focal child has an allegation in the Physical Maltreatment category on this referral; O otherwise",
+                            "ALGABS_PRNTCHLDCNFL_VICT_SELF": "=1 if the focal child has an allegation in the Parent/Child Conflict category on this referral; O otherwise",
+                            "ALGABS_SEXABUSE_VICT_SELF": "=1 if the focal child has an allegation in the Sexual Abuse or Exploitation category on this referral; O otherwise",
+                            "ALGABS_SEXCNTCTCHLD_VICT_SELF": "=1 if the focal child has an allegation in the Sexual Contact Between Children category on this referral; O otherwise",
+                            "ALGABS_TRUANCY_VICT_SELF": "=1 if the focal child has an allegation in the Truancy category on this referral; 0 otherwise",
+                            "ALGABS_UNWILLPRVDCR_VICT_SELF": "=1 if the focal child has an allegation in the Unwilling or Unable to Provide Care category on this referral; O otherwise",
+                            "ALGABSP_CHLDBHVR_VICT_SELF": "total no. of prior referrals where the focal child had an allegation in the Child Behaviors category",
+                            "ALGABSP_CRGVSUBABUSE VICT_SELF": "total no. of prior referrals where the focal child had an allegation in the Caregiver Substance Abuse category",
+                            "ALGABSP_INADPHYSCARE_VICT_SELF": "total no. of prior referrals where the focal child had an allegation in the Inadequate Physical Care category",
+                            "ALGABSP_MEDNEGLECT_VICT_SELF": "total no. of prior referrals where the focal child had an allegation in the Medical Neglect category",
+                            "ALGABSP_OTHREFSRC_VICT_SELF": "total no. of prior referrals where the focal child had an allegation in the Other Referral Source category",
+                            "ALGABSP_PHYALT_VICT_SELF": "total no. of prior referrals where the focal child had an allegation in the Physical Altercation category",
+                            "ALGABSP_PRNTCHLDCNFL_VICT_SELF": "total no. of prior referrals where the focal child had an allegation in the Parent/Child Conflict category",
+                            "BC_FEMALE_OR_MISS_VICT_SELF": "=1 if gender of child on birth certificate record is female; O otherwise",
+                            "BD_AGE_18_19_VICT_SELF": "=1 if father's age was 18-19 at time of child's birth; 0 otherwise",
+                            "BD_AGE_20_24_VICT_SELF": "=1 if father's age was 20-24 at time of child's birth; 0 otherwise",
+                            "BD_AGE_25_29_VICT_SELF": "=1 if father's age was 25-29 at time of child's birth; 0 otherwise",
+                            "BD_AGE_40PLUS_VICT_SELF": "=1 if father's age was 40 or greater at time of child's birth; O otherwise",
+                            "BD_EDUC_MISS_VICT_SELF": "=1 if father's education was \"Unknown\" or missing. This includes actual \"Unknown\" values, null values, and any invalid values; O otherwise",
+                            "BM_AGE_30_34_VICT_SELF": "=1 if mother's age was 30-34 at time of child's birth; 0 otherwise",
+                            "BM_AGE_35_39_VICT_SELF": "=1 if mother's age was 35-39 at time of child's birth; 0 otherwise",
+                            "BM_AGE_40PLUS_VICT_SELF": "=1 if mother's age was 40 or greater at time of child's birth; O otherwise",
+                            "BM_EDUC_BA_OR_HIGHER_VICT_SELF": "=1 if mother's education is \"Associate degree\", \"Bachelor's degree\", \"Master's degree\" OR \"Doctorate or Professional degree\"; O otherwise",
+                            "BM_EDUC_LESS_HS_VICT_SELF": "=1 if mother's education is \"8th grade or less\" OR \"9th-12th grade; No diploma\"; 0 otherwise",
+                            "BM_MARRIED_VICT_SELF": "=1 if mother is married; O otherwise",
+                            "BM_PAY_MEDICAID_VICT_SELF": "=1 if source of payment for delivery was Medicaid; O otherwise",
+                            "BM_PAY_OTHER_VICT_SELF": "=1 if source of payment for delivery was other; O otherwise",
+                            "BM_PAY_PRIVATE_VICT_SELF": "=1 if source of payment for delivery was private insurance; O otherwise",
+                            "BM_PR_LV_BIRTHS_4PLS_VICT_SELF": "=1 if there were 4 or more previous live births; O otherwise",
+                            "BM_SMKD_3MTH_PRIOR_M_VICT_SELF": "=1 if cigarette smoking before pregnancy is missing O otherwise",
+                            "BM_SMKD_3MTH_PRIOR_VICT_SELF": "=1 if cigarette smoking before pregnancy; O otherwise",
+                            "BR_MED_PREG_INF_YES_VICT_SELF": "=1 if any of infections present/treated; O otherwise",
+                            "BR_MED_PREG_RF_YES_VICT_SELF": "1 if any of risk factors are present; 0 otherwise",
+                            "POVERTY O NULL": "=1 if poverty rate = 0; 0 otherwise",
+                            "POVERTY_300VER_NULL": "=1 if poverty rate is greater than 30; 0 otherwise",
+                            "POVERTY_UNDER20_NULL": "=1 if poverty rate is greater than 10 but under 20; 0 otherwise",
+                            "POVERYRATE_NULL": "=1 if no poverty rate available; O otherwise",
+                            "ACJ_1_PER_PERP": "% of months seen in Allegheny County Jail last 1 year",
+                            "ACJ_1_PER_PRNT": "% of months seen in Allegheny County Jail last 1 year",
+                            "ACJ_1_PER_VICT_OTHR": "% of months seen in Allegheny County Jail last 1 year",
+                            "ACJ_1 PERP": "total no. of months in Allegheny County Jail in the last year",
+                            "ACJ_1_PRNT": "total no. of months in Allegheny County Jail in the last year",
+                            "ACJ_1_VICT_OTHR": "total no. of months in Allegheny County Jail in the last year",
+                            "ACJ_2_VICT_OTHR": "total no. of months in Allegheny County Jail in the last 2 years",
+                            "ACJ_3_PER_PRNT": "% of months seen in Allegheny County Jail last 3 years",
+                            "ACJ_3_PRNT": "total no. of months in Allegheny County Jail in the last 3 years",
+                            "ACJ_EVERIN_PERP": "=1 if the person was in Allegheny County Jail before; O otherwise",
+                            "ACJ_EVERIN_VICT_SELF": "=1 if the person was in Allegheny County Jail before; O otherwise",
+                            "ACJ_NOW_OTH": "=1 if the person was in Allegheny County Jail at the time of the referral; O otherwise",
+                            "ACJ_NOW_VICT_SELF": "=1 if the person was in Allegheny County Jail at the time of the referral; O otherwise",
+                            "JPO_1_CHLD": "total no. of months in Juvenile Probation in the last year",
+                            "JPO_1_PER_CHLD": "% of months seen in Juvenile Probation in last 1 year",
+                            "JPO_1_PER_VICT_SELF": "% of months seen in Juvenile Probation in last 1 year",
+                            "JPO_1_VICT_SELF": "total no. of months in Juvenile Probation in the last year",
+                            "JPO_3_PER_VICT_OTHR": "% of months seen in Juvenile Probation in last 3 years",
+                            "JPO_3_VICT_OTHR": "total no. of months in Juvenile Probation in the last 3 years",
+                            "JPO_EVERIN_OTH": "=1 if the person was in Juvenile Probation before; 0 otherwise",
+                            "JPO_EVERIN_PERP": "=1 if the person was in Juvenile Probation before; O otherwise",
+                            "JPO_EVERIN_PRNT": "=1 if the person was in Juvenile Probation before; O otherwise",
+                            "JPO_EVERIN_VICT_SELF": "=1 if the person was in Juvenile Probation before; O otherwise",
+                            "JPO_NOW_PERP": "=1 if the person was in Juvenile Probation at the time of the referral; O otherwise",
+                            "JPO_NOW_VICT_SELF": "=1 if the person was in Juvenile Probation at the time of the referral; O otherwise",
+                            "NO_BH_PERP": "=1 if no behavioral health history for this person; O otherwise",
+                            "NO BH PRNT": "=1 if no behavioral health history for this person; O otherwise",
+                            "NO_BH_VICT_SELF": "=1 if no behavioral health history for this person; 0 otherwise"
+                        }
                 }
             }
         },

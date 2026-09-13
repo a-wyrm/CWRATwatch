@@ -157,8 +157,8 @@
           details += `<thead><tr><th>Entity</th><th>Details / Amount</th></tr></thead><tbody>`;
 
           if (typeof value === 'object' && value !== null && value.Row && value.Column) {
-            let rows = value.Row.split(',').map(item => item.trim()).filter(Boolean);
-            let cols = value.Column.split(',').map(item => item.trim()).filter(Boolean);
+            let rows = value.Row.split('/').map(item => item.trim()).filter(Boolean);
+            let cols = value.Column.split('/').map(item => item.trim()).filter(Boolean);
 
             if (rows.length === 1) {
               details += `<tr><td>${value.Row.trim()}</td><td>${value.Column.trim()}</td></tr>`;
